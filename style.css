@@ -1,52 +1,50 @@
 :root {
     --primary: #00d4ff;
-    --text-main: #202123;
-    --sidebar-bg: #171717;
+    --sidebar: #0f1011;
     --white: #ffffff;
-    --gray-bg: #f9f9f9;
+    --gray-light: #f4f7fb;
+    --text: #1a1a1a;
 }
 
-* { box-sizing: border-box; transition: all 0.2s ease; }
-body { margin: 0; font-family: 'Inter', sans-serif; background: var(--white); color: var(--text-main); }
+* { box-sizing: border-box; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--white); color: var(--text); overflow: hidden; }
 
-.app-shell { display: flex; height: 100vh; overflow: hidden; }
+.app-container { display: flex; height: 100vh; }
 
-/* Sidebar Tasarımı */
-.sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 15px; }
-.btn-new-chat { background: transparent; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 600; }
-.btn-new-chat:hover { background: #2a2b32; border-color: var(--primary); }
-.history-list { flex: 1; overflow-y: auto; margin-top: 20px; }
-.history-item { padding: 12px; border-radius: 8px; font-size: 13px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 10px; }
-.history-item:hover { background: #2a2b32; }
+/* Sidebar: Başlangıçta dışarıda */
+.sidebar { 
+    position: fixed; left: -280px; top: 0; bottom: 0; width: 280px; 
+    background: var(--sidebar); color: white; z-index: 1000; padding: 20px;
+    display: flex; flex-direction: column;
+}
+.sidebar.active { left: 0; box-shadow: 15px 0 50px rgba(0,0,0,0.3); }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; backdrop-filter: blur(4px); }
+.overlay.active { display: block; }
 
-/* Chat Alanı */
-.chat-viewport { flex: 1; display: flex; flex-direction: column; background: var(--white); position: relative; }
-.chat-header { padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
-.floating-logo { width: 35px; animation: float 3s ease-in-out infinite; }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-.brand-name { font-weight: 700; letter-spacing: 2px; font-size: 18px; margin-left: 10px; }
+/* Butonlar & Formlar */
+.btn-plus { width: 100%; padding: 12px; background: transparent; border: 1px solid #333; color: white; border-radius: 12px; cursor: pointer; font-weight: 600; }
+.btn-plus:hover { background: #222; border-color: var(--primary); }
 
-.chat-window { flex: 1; overflow-y: auto; padding: 40px 15%; }
-.welcome-screen { text-align: center; margin-top: 10vh; color: #888; }
+/* Chat Penceresi */
+.main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; border-bottom: 1px solid #eee; }
+.logo-spin { width: 35px; animation: glow 2s infinite; }
+@keyframes glow { 0%, 100% { filter: drop-shadow(0 0 2px var(--primary)); } 50% { filter: drop-shadow(0 0 10px var(--primary)); } }
+.brand-text { font-weight: 800; font-size: 18px; letter-spacing: 1.5px; margin-left: 10px; }
 
-/* Mesaj Balonları */
-.msg-wrapper { display: flex; margin-bottom: 30px; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.msg { padding: 15px 20px; border-radius: 18px; line-height: 1.6; max-width: 85%; font-size: 15px; position: relative; }
-.user-msg { background: var(--gray-bg); margin-left: auto; color: #333; border-bottom-right-radius: 4px; }
-.ai-msg { background: var(--white); border: 1px solid #eee; margin-right: auto; border-bottom-left-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+/* Mesaj Balonları: Hafif Kare ama Kenarlar Yumuşak */
+.chat-window { flex: 1; overflow-y: auto; padding: 30px 15%; display: flex; flex-direction: column; gap: 25px; }
+.msg-container { display: flex; width: 100%; }
+.bubble { padding: 16px 22px; border-radius: 14px; max-width: 85%; font-size: 15px; line-height: 1.6; }
+.user-msg { background: var(--gray-light); margin-left: auto; border-bottom-right-radius: 4px; color: #333; }
+.ai-msg { background: #fff; border: 1px solid #eaeaea; margin-right: auto; border-bottom-left-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
-/* Input Alanı */
-.chat-footer { padding: 20px 15%; background: var(--white); }
-.input-container { display: flex; align-items: center; background: #fff; border: 1px solid #ddd; border-radius: 16px; padding: 10px 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-textarea { flex: 1; border: none; outline: none; padding: 10px; font-size: 16px; resize: none; max-height: 200px; }
-.action-btn, .send-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #acacbe; }
-.send-btn { color: var(--primary); padding-left: 15px; }
+/* Alt Giriş Alanı */
+.bottom-area { padding: 20px 15%; background: var(--white); }
+.input-wrapper { display: flex; align-items: center; background: #fff; border: 1.5px solid #eee; border-radius: 18px; padding: 8px 16px; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+textarea { flex: 1; border: none; outline: none; resize: none; font-size: 16px; padding: 10px 0; max-height: 150px; }
+.send-action { color: var(--primary); background: none; border: none; font-size: 22px; cursor: pointer; }
+.thinking-loader { display: none; align-items: center; gap: 8px; font-size: 12px; color: #999; margin-bottom: 8px; }
+.bounce-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: bounce 0.6s infinite alternate; }
 
-/* Yazma Animasyonu */
-.typing-status { display: none; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; color: #888; }
-.dot-flashing { width: 6px; height: 6px; border-radius: 5px; background-color: var(--primary); animation: dot-flashing 1s infinite linear alternate; position: relative; }
-@keyframes dot-flashing { 0% { opacity: 0.2; } 100% { opacity: 1; } }
-
-.model-dropdown { padding: 8px; border-radius: 8px; border: 1px solid #ddd; outline: none; cursor: pointer; }
-          
+@media (max-width: 768px) { .chat-window, .bottom-area { padding-left: 5%; padding-right: 5%; } }
