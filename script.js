@@ -4,134 +4,86 @@ const KEYS = {
     hf: "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"
 };
 
-let history = JSON.parse(localStorage.getItem('ai_history')) || [];
-let currentSessionId = null;
+let activeId = null;
+let chatStore = JSON.parse(localStorage.getItem('nt_history')) || [];
 
-// Başlatma
-document.getElementById('sendBtn').addEventListener('click', handleAction);
-document.getElementById('userInput').addEventListener('keypress', (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleAction(); }});
-
-function createNewChat() {
-    currentSessionId = Date.now();
-    document.getElementById('chatWindow').innerHTML = `<div class="welcome-screen"><h2>Yeni bir başlangıç...</h2></div>`;
-    updateSidebar();
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
 }
 
-async function handleAction() {
+async function sendMessage() {
     const input = document.getElementById('userInput');
-    const text = input.value.trim();
-    if(!text) return;
+    const msg = input.value.trim();
+    if(!msg) return;
 
-    if(!currentSessionId) currentSessionId = Date.now();
-
-    renderMessage(text, 'user');
+    if(!activeId) activeId = Date.now();
+    
+    appendBubble(msg, 'user');
     input.value = '';
-    showTyping(true);
+    showThinking(true);
 
     const model = document.getElementById('modelSelect').value;
     try {
-        let responseText = "";
+        let text = "";
         if(model === 'gemini') {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEYS.gemini}`, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({contents: [{parts: [{text: text}]}]})
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEYS.gemini}`, {
+                method: "POST", headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({contents:[{parts:[{text:msg}]}]})
             });
-            const data = await res.json();
-            responseText = data.candidates[0].content.parts[0].text;
+            const d = await r.json();
+            text = d.candidates[0].content.parts[0].text;
         } else {
-            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: "POST",
-                headers: {"Authorization": `Bearer ${KEYS.groq}`, "Content-Type": "application/json"},
-                body: JSON.stringify({model: "llama3-70b-8192", messages: [{role: "user", content: text}]})
+            const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST", headers: {"Authorization":`Bearer ${KEYS.groq}`,"Content-Type":"application/json"},
+                body: JSON.stringify({model:"llama3-70b-8192", messages:[{role:"user",content:msg}]})
             });
-            const data = await res.json();
-            responseText = data.choices[0].message.content;
+            const d = await r.json();
+            text = d.choices[0].message.content;
         }
-        
-        renderMessage(responseText, 'ai');
-        saveMessage(text, responseText);
+        appendBubble(text, 'ai');
+        saveHistory(msg, text);
     } catch (e) {
-        renderMessage("Sistemde bir hata oluştu lider. Key'leri kontrol et.", 'ai');
+        appendBubble("Sistem şu an meşgul, lütfen tekrar dene.", 'ai');
     }
-    showTyping(false);
+    showThinking(false);
 }
 
-async function triggerImageGen() {
-    const prompt = document.getElementById('userInput').value;
-    if(!prompt) return alert("Lider, resim için ne çizeyim?");
-    
-    renderMessage(prompt + " (Resim Oluşturuluyor...)", 'user');
-    showTyping(true);
-
+async function askForImage() {
+    const p = document.getElementById('userInput').value;
+    if(!p) return alert("Resim açıklaması yazın liderim!");
+    appendBubble(p + " (Resim Çiziliyor...)", 'user');
+    showThinking(true);
     try {
-        const response = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0", {
-            headers: { Authorization: `Bearer ${KEYS.hf}` },
-            method: "POST",
-            body: JSON.stringify({ inputs: prompt }),
+        const r = await fetch("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0", {
+            headers:{Authorization:`Bearer ${KEYS.hf}`}, method:"POST", body:JSON.stringify({inputs:p})
         });
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        renderMessage(`<img src="${url}" style="width:100%; border-radius:12px;">`, 'ai', true);
-    } catch (e) {
-        renderMessage("Görsel oluşturma hatası.", 'ai');
-    }
-    showTyping(false);
+        const b = await r.blob();
+        const u = URL.createObjectURL(b);
+        appendBubble(`<img src="${u}" style="width:100%; border-radius:10px;">`, 'ai', true);
+    } catch(e) { appendBubble("Resim hatası!", 'ai'); }
+    showThinking(false);
 }
 
-function renderMessage(text, type, isHTML = false) {
-    const chatWindow = document.getElementById('chatWindow');
-    if(chatWindow.querySelector('.welcome-screen')) chatWindow.innerHTML = '';
-    
-    const wrapper = document.createElement('div');
-    wrapper.className = `msg-wrapper`;
-    const msg = document.createElement('div');
-    msg.className = `msg ${type}-msg`;
-    
-    if(isHTML) msg.innerHTML = text;
-    else msg.innerText = text;
-    
-    wrapper.appendChild(msg);
-    chatWindow.appendChild(wrapper);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
+function appendBubble(txt, who, isHtml=false) {
+    const win = document.getElementById('chatWindow');
+    if(win.querySelector('.welcome-box')) win.innerHTML = '';
+    const row = document.createElement('div');
+    row.className = 'msg-container';
+    row.innerHTML = `<div class="bubble ${who}-msg">${isHtml ? txt : txt}</div>`;
+    win.appendChild(row);
+    win.scrollTop = win.scrollHeight;
 }
 
-function showTyping(show) {
-    document.getElementById('typingIndicator').style.display = show ? 'flex' : 'none';
-}
+function showThinking(s) { document.getElementById('typing').style.display = s ? 'flex' : 'none'; }
+document.getElementById('sendBtn').onclick = sendMessage;
 
-function saveMessage(u, a) {
-    let session = history.find(s => s.id === currentSessionId);
+function saveHistory(u, a) {
+    let session = chatStore.find(s => s.id === activeId);
     if(!session) {
-        session = { id: currentSessionId, title: u.substring(0, 25), logs: [] };
-        history.unshift(session);
+        session = { id: activeId, title: u.substring(0,20), data: [] };
+        chatStore.unshift(session);
     }
-    session.logs.push({u, a});
-    localStorage.setItem('ai_history', JSON.stringify(history));
-    updateSidebar();
+    session.data.push({u, a});
+    localStorage.setItem('nt_history', JSON.stringify(chatStore));
 }
-
-function updateSidebar() {
-    const list = document.getElementById('historyList');
-    list.innerHTML = history.map(s => `
-        <div class="history-item" onclick="loadSession(${s.id})">
-            <i class="fa-regular fa-message"></i> ${s.title}
-        </div>
-    `).join('');
-}
-
-function loadSession(id) {
-    const session = history.find(s => s.id === id);
-    if(session) {
-        currentSessionId = id;
-        const window = document.getElementById('chatWindow');
-        window.innerHTML = '';
-        session.logs.forEach(l => {
-            renderMessage(l.u, 'user');
-            renderMessage(l.a, 'ai');
-        });
-    }
-}
-
-updateSidebar();
-    
