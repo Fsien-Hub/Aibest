@@ -2,28 +2,30 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>No Team AI | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiBest | No Team Studio</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="sidebar">
-        <h2>NO TEAM AI</h2>
-        <button class="btn-primary">Yapay Zeka Sohbet</button>
-        <button style="background:#222; color:white;">Görsel Oluşturma</button>
-        <button style="background:#222; color:white;">Video Stüdyosu (Yakında)</button>
-    </div>
-    <div class="main-content">
-        <div class="chat-box" id="output">
-            <p style="color:#888;">Hoş geldin lider. Sana nasıl yardımcı olabilirim?</p>
+    <div class="container">
+        <header>
+            <img src="logo.svg" alt="AiBest Logo" class="logo">
+            <h1>AIBEST</h1>
+        </header>
+        
+        <div id="output" class="chat-display">Sistem hazır. Emirlerinizi bekliyorum lider.</div>
+        
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Yapay zekaya komut ver...">
+            <div class="buttons">
+                <button class="btn-chat" onclick="runAI('chat')">SOR / KODLA</button>
+                <button class="btn-img" onclick="runAI('img')">GÖRSEL YAP</button>
+            </div>
         </div>
-        <input type="text" id="userInput" placeholder="Bir şey yaz veya resim tarif et...">
-        <div style="margin-top:20px; display:flex; gap:15px;">
-            <button class="btn-primary" onclick="runAI('chat')">Mesaj Gönder</button>
-            <button style="background:#ff0077; color:white;" onclick="runAI('img')">Görsel Üret</button>
-        </div>
-        <img id="resultImg" style="display:none;">
+        
+        <img id="resultImg" class="ai-image" alt="AI Sonucu">
     </div>
     <script src="script.js"></script>
 </body>
 </html>
-
