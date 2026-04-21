@@ -1,16 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>AiBest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AiBest | No Team</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="box">
-        <h2>AIBEST</h2>
-        <div id="sonuc">Cevap burada görünecek...</div>
-        <input type="text" id="mesaj" placeholder="Bir şey yaz...">
-        <button onclick="aiSorgula()">GÖNDER</button>
+    <div class="main-container">
+        <div class="card">
+            <div class="logo-area">
+                <img src="logo.svg" alt="Logo" class="logo">
+                <div class="logo-glow"></div>
+            </div>
+            <h1>AIBEST</h1>
+            
+            <div id="output" class="response-box">Burada cevap buldunuz...</div>
+            
+            <div class="input-group">
+                <input type="text" id="userInput" placeholder="Mesajınızı yazın...">
+                <button onclick="runAI()" class="btn-main">GÖNDER / KODLA</button>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
