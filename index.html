@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>No Team AI | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>NO TEAM AI</h2>
+        <button class="btn-primary">Yapay Zeka Sohbet</button>
+        <button style="background:#222; color:white;">Görsel Oluşturma</button>
+        <button style="background:#222; color:white;">Video Stüdyosu (Yakında)</button>
+    </div>
+    <div class="main-content">
+        <div class="chat-box" id="output">
+            <p style="color:#888;">Hoş geldin lider. Sana nasıl yardımcı olabilirim?</p>
+        </div>
+        <input type="text" id="userInput" placeholder="Bir şey yaz veya resim tarif et...">
+        <div style="margin-top:20px; display:flex; gap:15px;">
+            <button class="btn-primary" onclick="runAI('chat')">Mesaj Gönder</button>
+            <button style="background:#ff0077; color:white;" onclick="runAI('img')">Görsel Üret</button>
+        </div>
+        <img id="resultImg" style="display:none;">
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
