@@ -7,20 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="main-container">
-        <div class="card">
-            <div class="logo-area">
-                <img src="logo.svg" alt="Logo" class="logo">
-                <div class="logo-glow"></div>
-            </div>
-            <h1>AIBEST</h1>
-            
-            <div id="output" class="response-box">Burada cevap buldunuz...</div>
-            
-            <div class="input-group">
-                <input type="text" id="userInput" placeholder="Mesajınızı yazın...">
-                <button onclick="runAI()" class="btn-main">GÖNDER / KODLA</button>
-            </div>
+    <div class="card">
+        <div class="logo-area">
+            <img src="logo.svg" alt="Logo" class="logo">
+        </div>
+        <h1>AIBEST</h1>
+        
+        <div id="output" class="cevap-alani">Sistem hazır, liderden emir bekliyor...</div>
+        
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="Mesajınızı buraya yazın...">
+            <button onclick="runAI()" class="btn-main">GÖNDER / KODLA</button>
         </div>
     </div>
     <script src="script.js"></script>
