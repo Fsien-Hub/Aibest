@@ -1,2 +1,52 @@
-/* AiBest Mega Core - No Team Studio */
-const _0x1f2e=['\x41\x49\x7a\x61\x53\x79\x43\x4c\x52\x50\x49\x31\x51\x69\x76\x5f\x70\x5f\x56\x65\x48\x43\x4e\x68\x45\x42\x70\x32\x61\x4f\x2d\x5a\x4c\x64\x30\x37\x77\x78\x34','\x67\x73\x6b\x5f\x45\x36\x67\x45\x74\x65\x4e\x33\x6a\x4f\x34\x55\x52\x6e\x52\x51\x6f\x72\x50\x54\x57\x47\x64\x79\x62\x72\x6f\x71\x46\x59\x64\x75\x62\x55\x43\x6c\x38\x61\x38\x70\x5a\x77\x49\x63\x34\x51\x38\x69\x72\x47\x68\x74\x79\x37','\x75\x73\x65\x72\x49\x6e\x70\x75\x74','\x6f\x75\x74\x70\x75\x74','\x69\x6e\x6e\x65\x72\x54\x65\x78\x74','\x42\x61\x67\x6c\x61\x6e\x74\x69\x20\x6b\x75\x72\x75\x6c\x75\x79\x6f\x72\x2e\x2e\x2e','\x50\x4f\x53\x54'];async function runAI(_0x3e){const _0x1a=document['getElementById'](_0x1f2e[2])['value'];const _0x5d=document['getElementById'](_0x1f2e[3]);if(!_0x1a)return alert('Lider, emir girin!');_0x5d[_0x1f2e[4]]=_0x1f2e[5];try{const _0x1=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key='+_0x1f2e[0],{method:_0x1f2e[6],body:JSON.stringify({contents:[{parts:[{text:_0x1a}]}]})});const _0x2=await _0x1['json']();if(_0x2['candidates']){_0x5d[_0x1f2e[4]]=_0x2['candidates'][0]['content']['parts'][0]['text'];return;}const _0x3=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:_0x1f2e[6],headers:{'Authorization':'Bearer '+_0x1f2e[1],'Content-Type':'application/json'},body:JSON.stringify({model:'llama3-8b-8192',messages:[{role:'user',content:_0x1a}]})});const _0x4=await _0x3['json']();if(_0x4['choices']){_0x5d[_0x1f2e[4]]=_0x4['choices'][0]['message']['content'];return;}}catch(_0xe){_0x5d[_0x1f2e[4]]='Sistem mesgul, tekrar deneyin.';}}
+const GEMINI_KEY = "AIzaSyCLRPI1Qiv_p_VeHCNhEBp2aO-ZLd07wx4";
+const GROQ_KEY = "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";
+
+async function runAI(mode) {
+    const prompt = document.getElementById("userInput").value;
+    const output = document.getElementById("output");
+
+    if (!prompt) return alert("Lider, bir emir girin!");
+
+    output.innerText = "Bağlantı kuruluyor... (Lütfen bekleyin)";
+
+    try {
+        // 1. ADIM: GEMINI DENE
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+        
+        const response = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+            output.innerText = data.candidates[0].content.parts[0].text;
+        } else {
+            // GEMINI OLMAZSA 2. ADIM: GROQ DENE
+            output.innerText = "Gemini meşgul, Groq devreye giriyor...";
+            
+            const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${GROQ_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    model: "llama3-8b-8192",
+                    messages: [{ role: "user", content: prompt }]
+                })
+            });
+
+            const groqData = await groqResponse.json();
+            output.innerText = groqData.choices[0].message.content;
+        }
+
+    } catch (error) {
+        console.error(error);
+        output.innerText = "Hata Detayı: " + error.message + ". Lütfen internet bağlantınızı ve Key durumunu kontrol edin.";
+    }
+}
