@@ -1,26 +1,16 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AiBest | No Team Studio</title>
+    <title>AiBest</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <img src="logo.svg" alt="AiBest Logo" class="logo">
-            <h1>AIBEST</h1>
-        </header>
-        
-        <div id="output" class="chat-display">Sistem liderini bekliyor...</div>
-        
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Yapay zekaya emir ver...">
-            <div class="buttons">
-                <button class="btn-chat" onclick="runAI()">SOR / KODLA</button>
-            </div>
-        </div>
+    <div class="box">
+        <h2>AIBEST</h2>
+        <div id="sonuc">Cevap burada görünecek...</div>
+        <input type="text" id="mesaj" placeholder="Bir şey yaz...">
+        <button onclick="aiSorgula()">GÖNDER</button>
     </div>
     <script src="script.js"></script>
 </body>
