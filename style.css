@@ -8,3 +8,25 @@ button { padding: 12px 25px; border-radius: 8px; border: none; font-weight: bold
 .btn-primary:hover { background: #00b8e6; }
 img { max-width: 100%; border-radius: 12px; margin-top: 20px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
+body {
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 200%; height: 200%;
+    background-image: 
+        linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: move 60s linear infinite;
+    z-index: -1;
+}
+
+@keyframes move {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-50px, -50px); }
+      }
