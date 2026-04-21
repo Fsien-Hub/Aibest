@@ -3,22 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AiBest | No Team</title>
+    <title>AiBest Pro | No Team Global</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="card">
-        <div class="logo-area">
-            <img src="logo.svg" alt="Logo" class="logo">
-        </div>
-        <h1>AIBEST</h1>
-        
-        <div id="output" class="cevap-alani">Sistem hazır, liderden emir bekliyor...</div>
-        
-        <div class="input-group">
-            <input type="text" id="userInput" placeholder="Mesajınızı buraya yazın...">
-            <button onclick="runAI()" class="btn-main">GÖNDER / KODLA</button>
-        </div>
+    <div class="app-shell">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-top">
+                <button onclick="createNewChat()" class="btn-new-chat">
+                    <i class="fa-solid fa-plus"></i> <span>Yeni Sohbet</span>
+                </button>
+            </div>
+            <div id="historyList" class="history-list">
+                </div>
+            <div class="sidebar-footer">
+                <div class="user-badge">
+                    <div class="avatar">NT</div>
+                    <span>Lider (No Team)</span>
+                </div>
+            </div>
+        </nav>
+
+        <main class="chat-viewport">
+            <header class="chat-header">
+                <div class="header-left">
+                    <button id="menuBtn" class="icon-btn"><i class="fa-solid fa-bars-staggered"></i></button>
+                    <div class="brand">
+                        <img src="logo.svg" class="floating-logo" alt="NT">
+                        <span class="brand-name">NO TEAM AI</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <select id="modelSelect" class="model-dropdown">
+                        <option value="gemini">Gemini 1.5 Pro</option>
+                        <option value="grok">Grok-1 (Llama-3)</option>
+                        <option value="pro">GPT-4 Turbo Mode</option>
+                    </select>
+                </div>
+            </header>
+
+            <div id="chatWindow" class="chat-window">
+                <div class="welcome-screen">
+                    <h2>Bugün neyi kodluyoruz Lider?</h2>
+                    <p>No Team altyapısı ile en hızlı yapay zekalar emrinde.</p>
+                </div>
+            </div>
+
+            <div class="chat-footer">
+                <div id="typingIndicator" class="typing-status">
+                    <div class="dot-flashing"></div> <span>Düşünüyor...</span>
+                </div>
+                <div class="input-container">
+                    <button class="action-btn" onclick="triggerImageGen()"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+                    <textarea id="userInput" placeholder="Bir şeyler yaz veya emir ver..." rows="1"></textarea>
+                    <button class="send-btn" id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+                <div class="copyright">AiBest Pro v2.0 - Powered by No Team</div>
+            </div>
+        </main>
     </div>
     <script src="script.js"></script>
 </body>
