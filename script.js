@@ -4,9 +4,9 @@ async function runAI() {
     const input = document.getElementById("userInput");
     const output = document.getElementById("output");
     
-    if (!input.value) return;
+    if (!input.value) return alert("Boş bırakma lider!");
 
-    output.innerText = "Sistem analiz ediyor...";
+    output.innerText = "Sistem analiz ediyor... Bekleyin.";
 
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${K}`, {
@@ -16,8 +16,14 @@ async function runAI() {
         });
         
         const data = await response.json();
-        output.innerText = data.candidates[0].content.parts[0].text;
+        
+        // Cevabı kutuya yazdırıyoruz
+        if(data.candidates && data.candidates[0].content.parts[0].text) {
+            output.innerText = data.candidates[0].content.parts[0].text;
+        } else {
+            output.innerText = "Yapay zeka şu an meşgul, tekrar dene.";
+        }
     } catch (e) {
-        output.innerText = "Bağlantı hatası! Lütfen tekrar deneyin.";
+        output.innerText = "Bağlantı koptu! İnternetini veya Key'i kontrol et.";
     }
 }
